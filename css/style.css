@@ -1,0 +1,101 @@
+header {
+	display: block;
+}
+
+body {
+	width: 95%;
+	
+	font-size: 12px;
+	font-family:Arial, sans-serif;
+}
+header {
+	background-color: #00a1ff;
+	padding: 10px;
+	margin: 8px;
+}
+header h1 {
+    padding: 0px;
+    margin: 7px;
+}
+
+section
+{
+	display: block;
+	padding: 10px;
+	width: 90%;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #a3bce8;
+}
+
+.button {
+  background-color: #589898; 
+  border: none;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 10px;
+  margin: 2px 1px;
+  cursor: pointer;
+  border-radius: 8px;
+  float:inline-start;
+}
+
+.buttonMod {
+  background-color: #00b8ffb5; 
+  color: white;  
+}
+
+.buttonSalva {
+  background-color: #00b8ffb5; 
+  color: white;  
+}
+
+.buttonAnnulla {
+  background-color: red; 
+  color: white;  
+}
+
+input {
+	text-transform : uppercase;
+}
+
+input:read-only {
+  border: 0;
+  box-shadow: none;
+  background-color: gray;
+}
+
+input:invalid {
+  border: 2px groove red;
+}
+
+.error {
+  border: 2px groove red;
+}
+
+footer 
+{
+	position: fixed;
+	bottom: 0;
+	width: 95%;
+	background-color: #589898;
+	color: white;
+	text-align: center;	
+	padding: 11px;
+	margin: 5px;
+}

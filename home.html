@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="it">
+ <head>
+  <meta charset="utf-8">
+  <title>Tasks  List</title>
+  <link href="css/style.css" rel="stylesheet">
+  <script type="text/javascript" src="js/toDo.js"></script>
+ </head>
+
+ <body>
+	<header> 
+		<h1>Tasks List</h1>
+	</header>
+
+	<section class="id" >
+		<label class="id" for="id">#:</label><br>
+		<input class="dati" type="hidden" id="rowIndex" >
+		<input class="dati id" type="text" id="id" style="display:none;" readonly="readonly"><br>
+	</section>
+  
+	<section>
+		<label for="titolo">Titolo:</label><br>
+		<input class="dati"type="hidden" id="id" />
+		<input class="dati"type="text" id="titolo" maxlength="100" size="50px" /><br>
+		<label for="descrizione">Oggetto:</label><br>
+		<textarea class="dati" id="oggetto" rows="5" cols="50" maxlength="150" ></textarea><br>
+		<label for="stato">Stato:</label><br>
+	
+		<select class="dati" id="stato" >
+		</select><br>
+	
+		<label for="stato">Data scadenza:</label><br>
+		<input type="date" class="dati" class="datetimepicker-input" id="dataScadenza" name="dataScadenza" value="" 
+			   min="2020-01-01" max="2030-12-31" pattern="\d{2}-\d{2}-\d{4}" 
+			   onblur="javascript:ctrDate()"/><br>
+		<div>
+			<button style="display:none;" class="button" id="aggiungi" onclick="javascript:aggiungiRigaTabella()">Add</button>
+			<button style="display:none;" class="button buttonSalva" id="salva" onclick="javascript:salvaRiga()">Save</button>
+			<button style="display:none;" class="button buttonAnnulla" id="annulla" onclick="javascript:annullaOperazione()">Cancel</button>
+		</div>
+	</section>
+  
+	<section style="height: 150px;overflow: auto;">
+		<table id="listaToDo" name="listaToDo">
+			<thead>
+			<tr>
+				<th width="5%">#</th>
+				<th width="41%">Titolo</th>
+				<th width="20%">Stato</th>
+				<th width="20%">Data scadenza</th>
+				<th width="7%"></th>
+				<th width="7%"></th>
+			</tr>
+			</thead>  
+			<tbody>
+			</tbody>
+		</table>  
+	</section>
+
+	<footer></footer>
+
+ </body>
+
+<script>
+
+init();
+
+function init()
+{
+	createOption();
+	toDoList.setOperazioneAttuale(toDoList.operazioni.inserimento);
+}
+
+function createOption()
+{
+	var select = document.getElementById('stato');
+	var descStato = toDoList.descrizioneStato;
+	
+	for (var i = 0; i<descStato.length; i++)
+	{
+		var opt = document.createElement('option');
+		opt.value = i;
+		opt.innerHTML = toDoList.descrizioneStato[i].Desc;
+		select.appendChild(opt);
+	}
+}
+
+function isEmpty(str) {
+    return (!str || 0 === str.length);
+}
+
+function aggiungiRigaTabella()
+{
+	gestioneRiga(true);
+}
+
+function modificaRigaTabella(id,btn)
+{
+	toDoList.rigaTabella.selezionaRiga(id) ;
+
+	var row = btn.parentNode.parentNode;
+	document.getElementById('rowIndex').value = row.rowIndex;
+}
+
+function eliminaRigaTabella(id,btn)
+{
+	var row = btn.parentNode.parentNode;
+	toDoList.rigaTabella.eliminaRiga(id,row.rowIndex) ;
+}
+
+function annullaOperazione()
+{
+	// se faccio modifica ma poi voglio annullare, faccio come volessi fare un nuovo inserimento
+	removeError();
+	toDoList.rigaTabella.pulisciCampi();
+	toDoList.setOperazioneAttuale(toDoList.operazioni.inserimento);	
+}
+
+function removeError()
+{
+	document.getElementById('titolo').classList.remove("error");
+	document.getElementById('oggetto').classList.remove("error");
+	document.getElementById('stato').classList.remove("error");
+	document.getElementById('dataScadenza').classList.remove("error");
+}
+
+function segnalaCampi()
+{
+	removeError();
+	var titolo = document.getElementById('titolo').value;
+	var oggetto = document.getElementById('oggetto').value;
+	var stato = document.getElementById('stato').value;
+	var dataScadenza = document.getElementById('dataScadenza').value;
+	
+	if(isEmpty(titolo)) 
+		document.getElementById('titolo').classList.add("error");
+	if(isEmpty(oggetto)) 
+		document.getElementById('oggetto').classList.add("error");
+	if(stato == '0') 
+		document.getElementById('stato').classList.add("error");
+	if(isEmpty(dataScadenza))
+		document.getElementById('dataScadenza').classList.add("error");
+}
+
+function salvaRiga()
+{
+	gestioneRiga(false);
+}
+
+function gestioneRiga(nuova)
+{
+	var rowIndex = document.getElementById('rowIndex').value;
+	var id = document.getElementById('id').value;
+	var titolo = document.getElementById('titolo').value;
+	var oggetto = document.getElementById('oggetto').value;
+	var stato = document.getElementById('stato').value;
+	var dataScadenza = document.getElementById('dataScadenza').value;
+	
+	removeError();
+	if(isEmpty(titolo) || isEmpty(oggetto) || stato == '0' || isEmpty(dataScadenza))
+	{
+		segnalaCampi();
+		alert("Inserire correttamente i dati.");
+	}
+	else
+	{
+		if(nuova)
+			toDoList.rigaTabella.creaNuovaRiga(titolo.toUpperCase(),oggetto,stato,dataScadenza) ;
+		else
+			toDoList.rigaTabella.modificaRiga(id,titolo.toUpperCase(),oggetto,stato,dataScadenza,rowIndex) ;
+	}
+}
+
+function ctrDate()
+{
+
+	var dataScadenza = document.getElementById('dataScadenza').value;
+debugger;
+	var date_regex = /^(19|20)\d{2}-(0[1-9]|1\d|2\d|3[01])-(0[1-9]|1[0-2])$/;
+	var testKO = !(date_regex.test(dataScadenza));
+	if (!isEmpty(dataScadenza) && testKO) 
+	{
+		alert("Inserire una data valida.");
+		document.getElementById('dataScadenza').value = "";
+		document.getElementById('dataScadenza').focus();
+	}
+}
+
+</script>
+
+</html>
